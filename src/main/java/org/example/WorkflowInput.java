@@ -1,5 +1,10 @@
 package org.example;
 
+/**
+ * Define the input object the workflow expects
+ *  - Add additional custom logic such as getters and setters
+ */
+
 public class WorkflowInput {
     // user data parameters
     private String email;

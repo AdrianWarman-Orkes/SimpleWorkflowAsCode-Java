@@ -14,6 +14,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // Add dependencies for the Orkes Java SDK
     implementation("org.conductoross:conductor-client:4.0.3")
     implementation("org.conductoross:java-sdk:4.0.3")
     implementation("io.orkes.conductor:orkes-conductor-client:4.0.3")

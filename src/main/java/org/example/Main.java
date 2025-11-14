@@ -10,18 +10,33 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+
+/**
+ * Main launcher that wires everything together
+ *  - Connects to Orkes Conductor cluster
+ *  - Initializes Orkres SDK clients
+ *  - Registers Task Definitions
+ *  - Registers the workflow definition
+ *  - Executes the workflow with input parameters
+ */
+
+
 public class Main {
 
-    private static final String CONDUCTOR_SERVER = "https://adrian-demo.orkesconductor.io/api";
-    private static final String KEY = "1f9192d8-c029-11f0-96dc-b64d3314ac5e";
-    private static final String SECRET = "1LTq7ryMizPIratPA9dQ8Z4pvYC7HVZtFagfRTZsreQq6aFe";
+    // in production, store credentials securely in environment variables
+    private static final String CONDUCTOR_SERVER = "<url>>";
+    private static final String KEY = "<key>>";
+    private static final String SECRET = "<secret>";
 
     public static void main(String[] args) throws InterruptedException, ExecutionException, TimeoutException {
+
         //Initialize Conductor Client
         var apiClient = new ApiClient(CONDUCTOR_SERVER, KEY, SECRET);
 
-        var orkesClient = new OrkesClients(apiClient);
-        var metadataClient = orkesClient.getMetadataClient();
+        // Initialize MetadataClient to be able to register a new task definition
+        var metadataClient = new OrkesClients(apiClient).getMetadataClient();
+
+        // get the list of task definitions from TaskDefinitionsList.java
         List<TaskDef> defs = TaskDefinitionList.getAllTaskDefs();
         metadataClient.registerTaskDefs(defs);
 
@@ -29,18 +44,23 @@ public class Main {
         var workflowExecutor = new WorkflowExecutor(apiClient, 100);
         workflowExecutor.initWorkers("org.example");
 
-        //Create workflow with input
+        //Create and register the workflow. set overwrite to true to save over pre-existing version of workflow.
         var workflowCreator = new NewUserOnboardingWorkflow(workflowExecutor);
         var workflow = workflowCreator.createWorkflow();
         workflow.registerWorkflow(true);
 
+        //Create the input for a workflow execution
         var input = new WorkflowInput("sample@email.com", "silver");
-        var workflowExecution = workflow.executeDynamic(input);
-        var workflowRun = workflowExecution.get(100, TimeUnit.SECONDS);
 
+        //execute the workflow dynamically.
+        var workflowExecution = workflow.executeDynamic(input);
+        var workflowRun = workflowExecution.get(10, TimeUnit.SECONDS);
+
+        //print the workflowId
         System.out.println("Started Workflow: " + workflowRun.getWorkflowId());
 
-        workflowExecutor.shutdown();
+
+        //workflowExecutor.shutdown();
     }
 }
 
