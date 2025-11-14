@@ -59,8 +59,9 @@ public class Main {
         //print the workflowId
         System.out.println("Started Workflow: " + workflowRun.getWorkflowId());
 
-
-        //workflowExecutor.shutdown();
+        // shut down the executor after running.
+        // The SDK uses the API to asynchronously execute the workflow.
+        workflowExecutor.shutdown();
     }
 }
 
