@@ -165,11 +165,9 @@ These run continuously once the application starts.
 
 Add to `build.gradle`:
 
-```xml
-<dependency>
-  <groupId>io.orkes.conductor</groupId>
-  <artifactId>orkes-conductor-client</artifactId>
-  <version>3.4.3</version> <!-- example -->
-</dependency>
+```
+    implementation("org.conductoross:conductor-client:4.0.3")
+    implementation("org.conductoross:java-sdk:4.0.3")
+    implementation("io.orkes.conductor:orkes-conductor-client:4.0.3")
 
 
