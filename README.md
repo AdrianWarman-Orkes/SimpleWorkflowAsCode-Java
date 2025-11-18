@@ -87,5 +87,4 @@ The onboarding workflow contains:
 
 ---
 
-## Project Structure
 
